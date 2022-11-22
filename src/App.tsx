@@ -48,7 +48,7 @@ function App() {
           authOptions
         )
         .then((response) => {
-          window.localStorage.setItem("token", response.data.token);
+          window.localStorage.setItem("token", response.data.access_token);
           navigate("/");
         });
     }
