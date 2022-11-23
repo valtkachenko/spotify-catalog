@@ -1,24 +1,23 @@
 import React, { FC, useState } from "react";
 import { Card, InputGroup } from "@blueprintjs/core";
-import { ClientCredentials } from "../types";
 import "./Login.scss";
 
 interface LoginProps {
-  onChangeCredentials: (newCredentials: ClientCredentials) => void;
+  onChangeClientId: (newClientId: string) => void;
 }
 
-export const Login: FC<LoginProps> = ({ onChangeCredentials }) => {
+export const Login: FC<LoginProps> = ({ onChangeClientId }) => {
   const [clientId, setClientId] = useState<string>("");
-  const [clientSecret, setClientSecret] = useState<string>("");
 
   const handleSubmit = () => {
-    if (clientId && clientSecret) {
-      onChangeCredentials({ clientId, clientSecret });
+    if (clientId) {
+      onChangeClientId(clientId);
     }
   };
 
   return (
     <div className="login">
+      <h1 className="title">Spotify Catalog</h1>
       <Card className="card">
         <div className="input-group">
           <p className="input-title">Client Id</p>
@@ -27,16 +26,6 @@ export const Login: FC<LoginProps> = ({ onChangeCredentials }) => {
             value={clientId}
             onChange={(e) => {
               setClientId(e.target.value);
-            }}
-          />
-        </div>
-        <div className="input-group">
-          <p className="input-title">Client Secret</p>
-          <InputGroup
-            className="input"
-            value={clientSecret}
-            onChange={(e) => {
-              setClientSecret(e.target.value);
             }}
           />
         </div>

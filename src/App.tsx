@@ -1,69 +1,54 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Buffer } from "buffer";
-import qs from "qs";
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
-import { ClientCredentials } from "./pages/types";
 import "./App.scss";
 
 function App() {
   const navigate = useNavigate();
 
-  const [clientCredentials, setClientCredentials] = useState<ClientCredentials>(
-    {
-      clientId: process.env.REACT_APP_CLIENT_ID || "",
-      clientSecret: process.env.REACT_APP_CLIENT_SECRET || "",
-    }
+  const [clientId, setClientId] = useState<string>(
+    process.env.REACT_APP_CLIENT_ID || ""
   );
 
-  const authOptions = {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization":
-        "Basic " +
-        Buffer.from(
-          `${clientCredentials.clientId}:${clientCredentials.clientSecret}`
-        ).toString("base64"),
-    },
-  };
+  const token = window.location.hash.substr(1).split("&")[0].split("=")[1];
+
+  if (token) {
+    window.localStorage.setItem("token", token);
+  }
 
   useEffect(() => {
-    if (!clientCredentials.clientId || !clientCredentials.clientSecret) {
-      if (!window.localStorage.getItem("token")) {
+    if (!token) {
+      if (!clientId) {
         navigate("/login");
+      } else {
+        const authUrl =
+          "https://accounts.spotify.com/authorize" +
+          "?response_type=token" +
+          "&client_id=" +
+          encodeURIComponent(clientId) +
+          "&scope=" +
+          encodeURIComponent(
+            "playlist-read-private playlist-modify-private user-top-read user-library-modify user-library-read user-read-private user-read-email"
+          ) +
+          "&redirect_uri=" +
+          encodeURIComponent("http://localhost:3000/callback");
+
+        window.location.href = authUrl;
       }
     }
-  }, []);
+  }, [clientId]);
 
-  useEffect(() => {
-    if (clientCredentials.clientId && clientCredentials.clientSecret) {
-      axios
-        .post(
-          "https://accounts.spotify.com/api/token",
-          qs.stringify({
-            grant_type: "client_credentials",
-          }),
-          authOptions
-        )
-        .then((response) => {
-          window.localStorage.setItem("token", response.data.access_token);
-          navigate("/");
-        });
-    }
-  }, [clientCredentials.clientId, clientCredentials.clientSecret]);
-
-  const handleChangeCredentials = (newCredentials: ClientCredentials) => {
-    setClientCredentials({ ...newCredentials });
+  const handleChangeClientId = (newClientId: string) => {
+    setClientId(newClientId);
   };
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="callback/" element={<Home />} />
       <Route
         path="/login"
-        element={<Login onChangeCredentials={handleChangeCredentials} />}
+        element={<Login onChangeClientId={handleChangeClientId} />}
       />
     </Routes>
   );
