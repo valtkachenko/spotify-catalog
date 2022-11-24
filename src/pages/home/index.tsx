@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  Icon,
-  IconSize,
-  InputGroup,
-  Navbar,
-} from "@blueprintjs/core";
+import { Button, Card, Icon, IconSize, InputGroup } from "@blueprintjs/core";
 import "./Home.scss";
 
 const artistsDefaultData = [
@@ -63,61 +56,52 @@ export const Home = () => {
   );
 
   return (
-    <div className="home">
-      <Navbar className="navbar">
-        {/* <Navbar.Heading className="heading">Spotify Catalog</Navbar.Heading> */}
-        <Navbar.Group className="group">
-          <Button className="btn" text="Home" />
-          <Button className="btn" text="Account" />
-        </Navbar.Group>
-      </Navbar>
-      <main className="main">
-        <InputGroup
-          className="search-input"
-          rightElement={searchButton}
-          placeholder="Enter name of song, artist or album"
-        />
-        <div className="artists">
-          <h2 className="title">Artists</h2>
-          <div className="section">
-            {artistsDefaultData.map((artist) => {
-              return (
-                <Card className="artist" key={artist.id}>
-                  <img
-                    src={artist.imgUrl}
-                    width="130"
-                    height="130"
-                    className="img"
+    <main className="main">
+      <InputGroup
+        className="search-input"
+        rightElement={searchButton}
+        placeholder="Enter name of song, artist or album"
+      />
+      <div className="artists">
+        <h2 className="title">Artists</h2>
+        <div className="section">
+          {artistsDefaultData.map((artist) => {
+            return (
+              <Card className="artist" key={artist.id}>
+                <img
+                  src={artist.imgUrl}
+                  width="130"
+                  height="130"
+                  className="img"
+                />
+                <h5 className="name">{artist.name}</h5>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+      <div className="songs">
+        <h2 className="title">Popular Songs</h2>
+        <div className="section">
+          {songsDefaultData.map((song) => {
+            return (
+              <Card className="song" key={song.id}>
+                <div className="info">
+                  <h5 className="name">{song.name}</h5>
+                  <p className="artist-name">{song.artistName}</p>
+                </div>
+                <Button className="btn">
+                  <Icon
+                    icon="chevron-down"
+                    color="white"
+                    size={IconSize.LARGE}
                   />
-                  <h5 className="name">{artist.name}</h5>
-                </Card>
-              );
-            })}
-          </div>
+                </Button>
+              </Card>
+            );
+          })}
         </div>
-        <div className="songs">
-          <h2 className="title">Popular Songs</h2>
-          <div className="section">
-            {songsDefaultData.map((song) => {
-              return (
-                <Card className="song" key={song.id}>
-                  <div className="info">
-                    <h5 className="name">{song.name}</h5>
-                    <p className="artist-name">{song.artistName}</p>
-                  </div>
-                  <Button className="btn">
-                    <Icon
-                      icon="chevron-down"
-                      color="white"
-                      size={IconSize.LARGE}
-                    />
-                  </Button>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Home } from "./pages/home";
 import { Login } from "./pages/login";
+import { LayoutWrapper } from "./components/layout-wrapper";
 import "./App.scss";
 
 function App() {
@@ -44,13 +45,15 @@ function App() {
   };
 
   return (
-    <Routes>
-      <Route path="callback/" element={<Home />} />
-      <Route
-        path="/login"
-        element={<Login onChangeClientId={handleChangeClientId} />}
-      />
-    </Routes>
+    <LayoutWrapper>
+      <Routes>
+        <Route path="callback/" element={<Home />} />
+        <Route
+          path="/login"
+          element={<Login onChangeClientId={handleChangeClientId} />}
+        />
+      </Routes>
+    </LayoutWrapper>
   );
 }
 
